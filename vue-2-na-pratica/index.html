@@ -22,14 +22,14 @@
       <div class="row g-5">
         <div class="col-md-6 col-lg-7 order-md-last">
           <ul class="list-group mb-3">
-            <li class="list-group-item d-flex flex-column">
+            <li class="list-group-item  d-flex flex-column py-3" v-for="contact in contacts">
               <div>
-                <h6 class="my-0">Fulano de Tal</h6>
-                <small class="text-body-secondary">fulano@email.com 9888434343</small>
+                <h6 class="my-0">{{ contact.name }}</h6>
+                <small class="text-body-secondary">{{ contact.email }} - {{ contact.phone }}</small>
               </div>
               <div class="d-flex mt-3">
                 <button class="btn btn-outline-primary btn-sm me-2">EDITAR</button>
-                <button class="btn btn-outline-danger btn-sm">DELETAR</button>
+                <button class="btn btn-outline-danger btn-sm" @click="removeContact(contact.id)">DELETAR</button>
               </div>
             </li>
           </ul>
@@ -52,8 +52,7 @@
 
               <div class="col-12">
                 <label for="email" class="form-label">E-mail</label>
-                <input type="email" class="form-control" id="email" placeholder="Seu melhor e-mail"
-                  v-model="contact.email">
+                <input type="email" class="form-control" placeholder="Seu melhor e-mail" v-model="contact.email">
                 <div class="invalid-feedback">
                   Please enter a valid email address for shipping updates.
                 </div>
@@ -61,12 +60,11 @@
 
               <div class="col-12">
                 <label for="phone" class="form-label">Contato</label>
-                <input type="text" class="form-control" id="address2" placeholder="Telefone/Celular"
-                  v-model="contact.phone">
+                <input type="text" class="form-control" placeholder="Telefone/Celular" v-model="contact.phone">
               </div>
 
               <div>
-                <button class="btn btn-outline-success" v-on:click.prevent="saveContact(contact)">Criar Contato</button>
+                <button class="btn btn-outline-success" @click.prevent="saveContact(contact)">Criar Contato</button>
               </div>
           </form>
         </div>
@@ -83,6 +81,7 @@
     let app = new Vue({
       el: "#app",
       data: {
+        contacts: [],
         name: 'Contatos App',
         contact: {
           name: '',
@@ -90,9 +89,39 @@
           phone: ''
         }
       },
+      created () {
+        this.contacts = JSON.parse(localStorage.getItem('contactsApp'))
+      },
       methods: {
         saveContact (contact) {
-          console.log(contact)
+          let contacts = localStorage.getItem('contactsApp')
+
+          contact.id = new Date().getTime();
+
+          if (contacts) {
+            contacts = JSON.parse(contacts)
+            contacts.push(contact)
+          } else {
+            contacts = [contact]
+          }
+
+          this.contacts = contacts
+
+          // Atualizar local storage independente de novo contato ou nova adição
+          localStorage.setItem('contactsApp', JSON.stringify(contacts))
+          this.contacts;
+        },
+        removeContact (contactId) {
+          let contacts = localStorage.getItem('contactsApp')
+
+          if (!contacts) return;
+
+          contacts = JSON.parse(contacts)
+          contacts = contacts.filter((contact) => contact.id != contactId)
+
+          this.contacts = contacts
+
+          localStorage.setItem('contactsApp', JSON.stringify(contacts))
         }
       }
     })
