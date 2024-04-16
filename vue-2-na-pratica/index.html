@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <div class="container">
+  <div class="container" id="app">
     <main>
       <div class="py-5 text-center">
         <img class="d-block mx-auto mb-4" src="./assets/logo.png" alt="" width="72" height="57">
@@ -20,7 +20,7 @@
       </div>
 
       <div class="row g-5">
-        <div class="col-md-6 order-md-last">
+        <div class="col-md-6 col-lg-7 order-md-last">
           <ul class="list-group mb-3">
             <li class="list-group-item d-flex flex-column">
               <div>
@@ -34,8 +34,8 @@
             </li>
           </ul>
         </div>
-        <div class="col-md-6 border-end">
-          <h4 class="mb-3">Contatos</h4>
+        <div class="col-md-6 col-lg-5 border-end">
+          <h4 class="mb-3">{{name}}</h4>
 
           <hr class="my-4">
 
@@ -44,7 +44,7 @@
 
               <div class="col-12">
                 <label for="address" class="form-label">Nome</label>
-                <input type="text" class="form-control" id="address" placeholder="Nome Completo" required>
+                <input type="text" class="form-control" placeholder="Nome Completo" v-model="contact.name">
                 <div class="invalid-feedback">
                   Please enter your shipping address.
                 </div>
@@ -52,19 +52,21 @@
 
               <div class="col-12">
                 <label for="email" class="form-label">E-mail</label>
-                <input type="email" class="form-control" id="email" placeholder="you@example.com">
+                <input type="email" class="form-control" id="email" placeholder="Seu melhor e-mail"
+                  v-model="contact.email">
                 <div class="invalid-feedback">
                   Please enter a valid email address for shipping updates.
                 </div>
               </div>
 
               <div class="col-12">
-                <label for="address2" class="form-label">Contato</label>
-                <input type="text" class="form-control" id="address2" placeholder="Apartment or suite">
+                <label for="phone" class="form-label">Contato</label>
+                <input type="text" class="form-control" id="address2" placeholder="Telefone/Celular"
+                  v-model="contact.phone">
               </div>
 
               <div>
-                <button class="btn btn-outline-success" type="submit">Criar Contato</button>
+                <button class="btn btn-outline-success" v-on:click.prevent="saveContact(contact)">Criar Contato</button>
               </div>
           </form>
         </div>
@@ -75,6 +77,26 @@
       <p class="mb-1">&copy; 2024 Marcio Navarro</p>
     </footer>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script>
+    let app = new Vue({
+      el: "#app",
+      data: {
+        name: 'Contatos App',
+        contact: {
+          name: '',
+          email: '',
+          phone: ''
+        }
+      },
+      methods: {
+        saveContact (contact) {
+          console.log(contact)
+        }
+      }
+    })
+  </script>
 </body>
 
 </html>
